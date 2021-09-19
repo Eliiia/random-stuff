@@ -1,2 +1,5 @@
 # Ignore vscode stuff
 .vscode/
+bin/
+obj/
+cs.csproj
