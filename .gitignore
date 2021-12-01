@@ -1,5 +1,11 @@
 # Ignore vscode stuff
 .vscode/
+
+### Compiler stuff
+# c++
 bin/
 obj/
+# c#
 cs.csproj
+# rust
+target/
