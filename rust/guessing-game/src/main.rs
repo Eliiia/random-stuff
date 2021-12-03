@@ -20,7 +20,7 @@ fn main() {
             .expect("Failed to read line"); // on an error, says this then quits
 
         //let guess: u32 = guess.trim().parse().expect("Please type a number!"); // shadowing; equivalent to guess = guess.trim().parse() etc
-            // u32 says the type of it is an unsigned 32 bit integer
+            // `: u32` specifies the type of it is an unsigned 32 bit integer. usually not necessary
             // expect() also crashes the program with that string, if there is an error
 
         let guess: u32 = match guess.trim().parse() { // parse returns a Result type, which we can check the content of:
