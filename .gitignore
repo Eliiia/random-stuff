@@ -1,5 +1,6 @@
-# Ignore vscode stuff
+### vscode/IDE stuff
 .vscode/
+.idea/
 
 ### Compiler stuff
 # c++
