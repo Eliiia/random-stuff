@@ -1,7 +1,7 @@
 fn main() {
     const L:usize = 20; // length
 
-    let mut arr = [0;L];
+    let mut arr = [0;L]; //sidenote from later: apparently i should have used a vector, not an array
     arr[1] = 1;
 
     for x in 2..L {

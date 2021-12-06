@@ -3,6 +3,9 @@
 
 // this is also not guaranteed to compile
 
+// oh yeah and:
+// this isnt intended to be easy to read as i probably am not expecting to read back through this without ctrl+f
+
 fn main() {
   // weird syntax stuff
     let arr = [3;5] // [3,3,3,3,3]
@@ -87,4 +90,44 @@ fn main() {
     2/3; // results in 0, cuz theyre both integers, not floats
     43%5;
 
+  // scopes n ownership n stuff
+    // actual explanation here:
+    // https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html
+    {
+        let s = "hello" // (string literals are stored on the stack)
+        // s is usable here, as expected
+    } // s is not usable here, as expected
+
+    // stores string on a heap, in case the value isnt known at compile time
+    let mut s = String::from("hello") 
+    s.push_str(", world!") // also means it can be mutable, unlike hardcoded strings
+
+    // this thing is a bit weird yo
+    // (ALL OF THE BELOW only applies to items on the heap, not on the stack - such as strings)
+    let s1 = String::from("hello");
+    // when we declare this, the string itself is stored on the heap
+    // however, on the stack: the pointer, length, and capacity (allocated space on the heap) are stored  
+    let s2 = s1; // so when we declare this, it uses the same pointer, going to the EXACT same data
+    s2[0] = "y" // this would change both s1 and s2, as they both point to the same thing
+    // s1 is no longer considered valid after `let s2 = s1` to stop them both from trying to invalidate
+    // explained better here: https://doc.rust-lang.org/book/img/trpl04-02.svg
+    let s2 = s1.clone(); // this line will instead "clone" it, causing them to point to seperate points of data
+    // this is not a good thing to do, as it is very cpu and ram expensive
+
+    // losing ownership
+    let s = String::from("helloooooo") // this is in the heap, therefore:
+    function(s) // s is no longer valid cuz it was "given" to the function
+    let x = 5; // this is in the stack
+    function(5); // therefore x still functions after this, as it is "copied", not "given" to the function
+
+    // Borrowing ownership
+    fn borrow(x: &i32) { 
+        // (x: &mut i32) if we want it to be mutable
+        // important limitation: can only have 1 mutable reference at a time
+        x++
+    }
+    let /*mut*/ x = 0;
+    borrow(&x); // or `borrow(&mut x)`
+    x++; // doesnt throw an error, as x is still there, as it was only a reference
+    // it was not passed to the function.
 }
