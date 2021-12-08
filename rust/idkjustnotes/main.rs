@@ -6,6 +6,8 @@
 // oh yeah and:
 // this isnt intended to be easy to read as i probably am not expecting to read back through this without ctrl+f
 
+// as of 08/12/2021: im just not gonna bother with the rest of this 
+
 fn main() {
   // weird syntax stuff
     let arr = [3;5] // [3,3,3,3,3]
@@ -131,3 +133,4 @@ fn main() {
     x++; // doesnt throw an error, as x is still there, as it was only a reference
     // it was not passed to the function.
 }
+// stopped writing as of 08/12/2021
