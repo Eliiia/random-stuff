@@ -90,7 +90,7 @@ fn main() {
     4*30;
     56.7/32.2;
     2/3; // results in 0, cuz theyre both integers, not floats
-    43%5;
+    43%5;.
 
   // scopes n ownership n stuff
     // actual explanation here:
