@@ -298,6 +298,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "gtk"
+version = "0.1.0"
+dependencies = [
+ "gtk4",
+]
+
+[[package]]
 name = "gtk4"
 version = "0.4.0"
 source = "git+https://github.com/gtk-rs/gtk4-rs.git#78bb52b37f3babf67b6ab2857d42536169e5926a"
@@ -575,13 +582,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
-]
-
-[[package]]
-name = "tmp"
-version = "0.1.0"
-dependencies = [
- "gtk4",
 ]
 
 [[package]]
