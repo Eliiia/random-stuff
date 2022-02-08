@@ -10,3 +10,6 @@ obj/
 cs.csproj
 # rust
 target/
+# ts
+build/
+node_modules/

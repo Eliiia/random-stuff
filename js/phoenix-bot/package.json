@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@amelix/phoenix.js": "^1.0.0"
+    "@amelix/phoenix.js": "^1.0.0",
+    "@types/node": "^17.0.8"
   }
 }
