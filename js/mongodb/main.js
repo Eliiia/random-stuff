@@ -1,20 +1,45 @@
 const mongoose = require("mongoose");
 
-console.log("Starting");
+console.log("starting...");
 
-main().catch((err) => console.log(err));
+// schema/method
+const userSchema = new mongoose.Schema({
+  name: String,
+  password: String,
+  id: String,
+});
+userSchema.methods.getId = function () {
+  return this.id;
+};
 
-async function main() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/test");
+const User = mongoose.model("User", userSchema);
 
-  const kittySchema = new mongoose.Schema({ name: String });
-  kittySchema.methods.speak = function () {
-    return this.name ? "Meow name is " + this.name : "I don't have a name";
-  };
+// run function
+writeUser().catch((err) => console.log(err));
 
-  const Kitten = mongoose.model("Kitten", kittySchema);
+// functions
 
-  const silence = new Kitten({ name: "Silence" });
-  silence.save();
-  console.log(silence.speak());
+async function getUser() {
+  await mongoose.connect("mongodb://127.0.0.1:27017/test?authSource=admin", {
+    user: "elia",
+    pass: "password",
+  });
+
+  User.find({ id: "123" }).exec((err, users) => {
+    if (err) throw err;
+    console.log(users);
+  });
+}
+
+async function writeUser() {
+  await mongoose.connect("mongodb://127.0.0.1:27017/test?authSource=admin", {
+    user: "elia",
+    pass: "password",
+  });
+
+  const elia = new User({ name: "Elia", password: "password", id: "12223" });
+
+  console.log(elia.getId());
+
+  elia.save();
 }
