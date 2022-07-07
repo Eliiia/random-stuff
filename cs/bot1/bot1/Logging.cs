@@ -2,7 +2,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
-namespace bot1;
+namespace Log;
 
 public class LoggingService
 {
