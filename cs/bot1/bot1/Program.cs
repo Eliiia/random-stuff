@@ -1,4 +1,6 @@
-﻿using Discord;
+﻿using bot1;
+using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 
 public class Program
@@ -11,7 +13,9 @@ public class Program
     public async Task MainAsync()
     {
         var client = new DiscordSocketClient();
-        client.Log += Log;
+        var logger = new LoggingService();
+
+        await logger.Initialise(client, new CommandService());
 
         var token = Environment.GetEnvironmentVariable("TOKEN");
 
