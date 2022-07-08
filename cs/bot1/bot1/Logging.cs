@@ -2,7 +2,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
-namespace Log;
+namespace bot1;
 
 public class LoggingService
 {
@@ -17,10 +17,10 @@ public class LoggingService
     {
         if (message.Exception is CommandException cmdException)
             Console.WriteLine(
-                $"[Command/{message.Severity}] {cmdException.Command.Aliases.First()}"
-                + $" failed to execute in {cmdException.Context.Channel}");
-
-        else Console.WriteLine($"[General/{message.Severity}] {message}");
+                $"[Command/{message.Severity}] {cmdException.Command.Aliases.First()} failed to execute in {cmdException.Context.Channel}"
+            );
+        else
+            Console.WriteLine($"[General/{message.Severity}] {message}");
 
         return Task.CompletedTask;
     }

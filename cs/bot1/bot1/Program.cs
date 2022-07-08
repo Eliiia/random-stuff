@@ -2,17 +2,15 @@
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using Log;
+
+namespace bot1;
 
 public class Program
 {
     private readonly DiscordSocketClient client = new();
 
     private readonly CommandService commands =
-        new(new CommandServiceConfig
-        {
-            CaseSensitiveCommands = false
-        });
+        new(new CommandServiceConfig { CaseSensitiveCommands = false });
 
     private readonly IServiceProvider services;
 
@@ -46,13 +44,14 @@ public class Program
     private async Task CommandHandlerAsync(SocketMessage arg)
     {
         var msg = arg as SocketUserMessage;
-        if (msg == null) return;
 
-        if (msg.Author.IsBot) return;
+        if (msg == null || msg.Author.IsBot)
+            return;
 
         var pos = 0;
 
-        if (msg.HasCharPrefix(';', ref pos)) return;
+        if (msg.HasCharPrefix(';', ref pos))
+            return;
 
         var context = new SocketCommandContext(client, msg);
         var result = await commands.ExecuteAsync(context, pos, services);
