@@ -7,9 +7,9 @@ namespace bot1;
 
 public class Program
 {
-    private readonly DiscordSocketClient client = new();
+    private readonly DiscordSocketClient _client = new();
 
-    private readonly CommandService commands =
+    private readonly CommandService _commands =
         new(new CommandServiceConfig { CaseSensitiveCommands = false });
 
     private readonly IServiceProvider services;
@@ -21,24 +21,24 @@ public class Program
 
     private async Task MainAsync()
     {
-        var logger = new LoggingService();
-        await logger.Initialise(client, commands);
+        LoggingService logger = new();
+        await logger.Initialise(_client, _commands);
 
         await InitCommands();
 
         var token = Environment.GetEnvironmentVariable("TOKEN");
 
-        await client.LoginAsync(TokenType.Bot, token);
-        await client.StartAsync();
+        await _client.LoginAsync(TokenType.Bot, token);
+        await _client.StartAsync();
 
         await Task.Delay(-1); //waits infinitely
     }
 
     private async Task InitCommands()
     {
-        await commands.AddModulesAsync(Assembly.GetEntryAssembly(), services);
+        await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), services);
 
-        client.MessageReceived += CommandHandlerAsync;
+        _client.MessageReceived += CommandHandlerAsync;
     }
 
     private async Task CommandHandlerAsync(SocketMessage arg)
@@ -50,11 +50,11 @@ public class Program
 
         var pos = 0;
 
-        if (msg.HasCharPrefix(';', ref pos))
+        if (!msg.HasCharPrefix(';', ref pos))
             return;
 
-        var context = new SocketCommandContext(client, msg);
-        var result = await commands.ExecuteAsync(context, pos, services);
+        var context = new SocketCommandContext(_client, msg);
+        var result = await _commands.ExecuteAsync(context, pos, services);
 
         if (!result.IsSuccess && result.Error != CommandError.UnknownCommand)
             await msg.Channel.SendMessageAsync(result.ErrorReason);
