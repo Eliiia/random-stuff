@@ -14,3 +14,5 @@ tmp/
 # ts
 build/
 node_modules/
+#py
+*.pyc
