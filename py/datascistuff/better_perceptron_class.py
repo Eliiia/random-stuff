@@ -65,10 +65,6 @@ y = y[y<2]
 p1 = Perceptron(2, 0.01, 20)
 
 p1.fit(X, y)
-print(p1.w, p1.bias)
-#p.predict(X, y)
-
-print(p1.misses)
 
 # ---
 
@@ -79,8 +75,6 @@ X = np.array([[0,1], [0,0], [0,1], [1,1], [1,0], [0,0], [0,1], [1,1], [1,0]])
 y = np.array([1,1,1,0,0,1,1,0,0]) # first number being 0 defines success
 
 p2.fit(X, y)
-print(p2.w, p2.bias)
-#print(p.predict(np.array([1,0])))
 
 
 # ---
