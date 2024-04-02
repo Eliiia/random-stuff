@@ -4,7 +4,7 @@
 
 const data = require("./out.json");
 
-const outdata = Object.entries(data).sort(([,a],[,b]) => a-b)
+const outdata = Object.entries(data).sort(([,b],[,a]) => a-b)
 // Object.entries(data) splits each key/value into separate arrays within one
 // e.g. [["a", 1], ["b", 12], ["c", 3]]
 // .sort() sorts
