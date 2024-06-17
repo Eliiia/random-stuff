@@ -19,3 +19,6 @@ node_modules/
 
 ### data output
 **/out.json
+
+### all .config files
+**/*.env
