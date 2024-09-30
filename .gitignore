@@ -16,6 +16,8 @@ build/
 node_modules/
 #py
 *.pyc
+#c
+out
 
 ### data output
 **/out.json

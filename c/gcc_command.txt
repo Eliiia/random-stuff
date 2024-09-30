@@ -1,0 +1,1 @@
+LANG=EN gcc -Wall -ansi -pedantic -o out main.c && ./out
