@@ -6,6 +6,7 @@
 #define OUT 0
 
 #define MAXWORDS 5
+#define MAXWORDLENGTH 10
 
 int main() 
 {
@@ -39,11 +40,15 @@ int main()
 
     printf("\n"); /* empty line for formatting's sake */
 
-    for (i = 0; i < MAXWORDS; i++) { /* per word */
-        printf("%d ", aword[i]);
-        for (j = 0; j < aword[i]; j++) { /* print number of chars */
-            printf("█");
+    for (i = MAXWORDLENGTH; i >= 0; i--) {
+        /* loop for y axis (potential characters) */
+
+        /* loop for x axis (words) */
+        for (j = 0; j < MAXWORDS; j++) {
+            if (aword[j] > i) printf("██"); /* if has enough characters, print block */
+            else printf("  "); /* if doesnt have enough, put a space */
         }
+
         printf("\n");
     }
 
