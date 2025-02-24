@@ -2,21 +2,32 @@ import json
 import sys
 from dateutil.parser import isoparse, parse
 from datetime import datetime, timedelta, timezone
+from tabulate import tabulate
 
 TI_SHEET_LOCATION = "/home/elia/.ti-sheet"
 
 tz = timezone.utc
 
+# open file
+with open(TI_SHEET_LOCATION) as file:
+    data = json.load(file)["work"]
+
 # format for printing
 def getDateString(d):
     return f'{d:%d/%m/%y at %H:%M}'
 
-def getTotalMinutes(startoflog, endoflog=0):
-    # endoflog is an optional parameter, if unspecified will default to "right now" (see few lines down for where it is assigned)
+def cleanData(data):
+    for x in data:
+        x["start"] = isoparse(x["start"])
+        if "end" not in x:
+            x["end"] = datetime.now(tz=tz)
+        else:
+            x["end"] = isoparse(x["end"])
+    
+    return data
 
-    # open file
-    with open(TI_SHEET_LOCATION) as file:
-        data = json.load(file)["work"]
+def getTotalMinutes(data, startoflog, endoflog=0):
+    # endoflog is an optional parameter, if unspecified will default to "right now" (see few lines down for where it is assigned)
 
     # get current datetime; ?
     now = datetime.now(tz=tz)
@@ -27,12 +38,8 @@ def getTotalMinutes(startoflog, endoflog=0):
 
     # loop through every item in ti_sheet,
     for x in data:
-        xstart = isoparse(x["start"])
-
-        if "end" not in x: # if no end to activity, it is current 
-            xend = now # so that it can count towards totals
-        else: 
-            xend = isoparse(x["end"])
+        xstart = x["start"]
+        xend = x["end"]
         
         # if before or after this period of time, skip
         if (xstart < startoflog): continue 
@@ -49,16 +56,45 @@ def getTotalMinutes(startoflog, endoflog=0):
     # return
     return timedata
 
+def printCalendarFormat(data, startoflog, endoflog=0):
+    # get current datetime; ?
+    now = datetime.now(tz=tz)
+    if (endoflog == 0): endoflog = now # default assignment for optional here, because we need it to be equal to now
+
+    # generate each hour; we will loop through this
+    timeslots = [startoflog + timedelta(hours=i) for i in range((endoflog - startoflog).seconds // 3600 + 1)]
+
+    # header!
+    header = ["Time", "Activities"]
+
+    # gen table rowsmissing
+    table = []
+    for t in timeslots:
+        t_end = t + timedelta(hours=1) # t2 = t + an hour
+        row = [t.strftime("%H:%M")] # time label in time column
+        events = [event["name"] for event in data if event["start"] < t_end and t < event["end"]]
+        
+        if events:
+            row.append(", ".join(events))
+        else:
+            row.append("")
+
+        table.append(row)
+    
+    # print table
+    print(tabulate(table, headers=header, tablefmt="plain"))
+
+
 now = datetime.now(tz=tz)
 # start of current day
 startofday = datetime(now.year, now.month, now.day, tzinfo=now.tzinfo)
 # start of current week (todo does this work if the week starts last month?)
 startofweek = datetime(now.year, now.month, now.day - now.weekday(), tzinfo=now.tzinfo)
 
-# log dates used
-#print(f"Reading events from : {getDateString(startofweek)} to {getDateString(startofday)}\n")
-#activity = getTotalMinutes(startofweek, startofday)
+# clean data! specifically, fill in missing "end" datapoints with current datetime
+data = cleanData(data)
 
+# parse args
 if (len(sys.argv) == 2):
     # if one argument given, assume text direction given
     if sys.argv[1] == "day": # today 
@@ -67,7 +103,8 @@ if (len(sys.argv) == 2):
     elif sys.argv[1] == "week": # this week
         start = startofweek
         print(f"Reading events this week (from {getDateString(startofweek)} to right now)")
-    activity = getTotalMinutes(start)
+    activity = getTotalMinutes(data, start)
+    printCalendarFormat(data, start)
 elif (len(sys.argv) == 3): 
     # if two arguments given, assume they are given dates 
     start = (parse(sys.argv[1], dayfirst=True)).replace(tzinfo=tz)
@@ -75,15 +112,21 @@ elif (len(sys.argv) == 3):
 
     print(f"Reading events from given dates : {getDateString(startofweek)} to {getDateString(startofday)}\n")
 
-    activity = getTotalMinutes(start, end)
+    activity = getTotalMinutes(data, start, end)
 else:
     print(f"Dates not given, reading events today (from {getDateString(startofday)} to right now)")
-    activity = getTotalMinutes(startofday)
+    activity = getTotalMinutes(data, startofday)
+
+print() # empty line
 
 # json print as amount of minutes
 #print(timedata)
 
+# calendar thing!
+printCalendarFormat(data, startofday)
+
 # pretty print
+print()
 totalmins = 0
 for x in activity:
     hours = int(activity[x] / 60)

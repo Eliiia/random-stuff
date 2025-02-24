@@ -80,15 +80,25 @@ for start in timeslots:
         else:
             y[k].append(0)
 
+# Convert to numpy arrays
+for n in y:
+    y[n] = np.array(y[n])
 
 print(timeslots)
 print(y)
 
-# plot
+# plot as line chart
 weeknums = [str(w.isocalendar()[1]) for w in timeslots]
+#for n in y:
+#    plt.plot(weeknums, y[n])
+
+# plot as stacked bar chart
+bottom = np.empty(len(weeknums))
 for n in y:
-    plt.plot(weeknums, y[n])
- 
+    print(f"{n}: {y[n]}")
+    plt.bar(weeknums, y[n])
+    bottom = np.add(bottom, y[n])
+
 # data 
 plt.xlabel("Week numbers")
 plt.ylabel("Hours")
