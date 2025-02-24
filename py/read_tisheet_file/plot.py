@@ -52,18 +52,19 @@ def getTotalMinutes(data, startoflog, endoflog=0):
     # return
     return timedata
 
+# what do you want to exclude?
+excluded = ["comp1054", "comp1056"]
+
 # get all keys
-keys = list({d["name"] for d in data if "name" in d})
-print(keys)
+keys = list({d["name"] for d in data if d["name"] not in excluded})
+#print(keys)
 
 # define start
 # use this if you have a particular idea:
 #start = datetime(2025,2,3, tzinfo=timezone.utc) 
 # use this if you want to just use the first recorded thing:
 start = data[0]["start"]
-print(start)
 start = start - timedelta(days=start.weekday())
-print(start)
 
 # get data
 # generate each week
@@ -84,8 +85,8 @@ for start in timeslots:
 for n in y:
     y[n] = np.array(y[n])
 
-print(timeslots)
-print(y)
+#print(timeslots)
+#print(y)
 
 # plot as line chart
 weeknums = [str(w.isocalendar()[1]) for w in timeslots]
@@ -94,9 +95,11 @@ weeknums = [str(w.isocalendar()[1]) for w in timeslots]
 
 # plot as stacked bar chart
 bottom = np.empty(len(weeknums))
-for n in y:
+for n in sorted(y.keys()):
+    print(n)
     print(f"{n}: {y[n]}")
-    plt.bar(weeknums, y[n])
+    #print(bottom)
+    plt.bar(weeknums, y[n], bottom=bottom)
     bottom = np.add(bottom, y[n])
 
 # data 
@@ -105,7 +108,4 @@ plt.ylabel("Hours")
 plt.legend(keys)
 plt.title("Amount of time on modules per week")
 plt.show()
-
-# todo:
-# bar chart option?
-# or just make it a bar chart?
+t
