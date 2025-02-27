@@ -3,6 +3,7 @@ import numpy as np
 import json
 from dateutil.parser import isoparse, parse
 from datetime import datetime, timedelta, timezone
+from itertools import accumulate
 
 TI_SHEET_LOCATION = "/home/elia/.ti-sheet"
 
@@ -62,8 +63,9 @@ keys = list({d["name"] for d in data if d["name"] not in excluded})
 # define start
 # use this if you have a particular idea:
 #start = datetime(2025,2,3, tzinfo=timezone.utc) 
-# use this if you want to just use the first recorded thing:
+# use this if you want to just use the date of the first recorded thing:
 start = data[0]["start"]
+start = datetime(start.year, start.month, start.day, tzinfo=timezone.utc)
 start = start - timedelta(days=start.weekday())
 
 # get data
@@ -85,17 +87,17 @@ for start in timeslots:
 for n in y:
     y[n] = np.array(y[n])
 
-#print(timeslots)
-#print(y)
-
 # plot as line chart
 weeknums = [str(w.isocalendar()[1]) for w in timeslots]
 #for n in y:
 #    plt.plot(weeknums, y[n])
 
-# plot A:
+# plot A: stackplot
 sortedkeys = sorted(y.keys())
+# A1: per week
 y_vals = [y[n] for n in sortedkeys]
+# A2: accumulated
+#y_vals = [y[n].cumsum().tolist() for n in sortedkeys]
 plt.stackplot(weeknums, y_vals)
 
 # plot B/C: stacked bar chart or stacked line chart
@@ -109,9 +111,9 @@ plt.stackplot(weeknums, y_vals)
     # both B and C
     #bottom = np.add(bottom, y[n])
 
-# data 
+# show plot
 plt.xlabel("Week numbers")
 plt.ylabel("Hours")
-plt.legend(sortedkeys) # for B/C
+plt.legend(sortedkeys)
 plt.title("Amount of time on modules per week")
 plt.show()
