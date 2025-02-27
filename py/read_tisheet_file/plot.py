@@ -94,24 +94,24 @@ weeknums = [str(w.isocalendar()[1]) for w in timeslots]
 #    plt.plot(weeknums, y[n])
 
 # plot A:
-#y_vals = np.array(list(y.values()))
-#plt.stackplot(weeknums, y_vals)
+sortedkeys = sorted(y.keys())
+y_vals = [y[n] for n in sortedkeys]
+plt.stackplot(weeknums, y_vals)
 
 # plot B/C: stacked bar chart or stacked line chart
-bottom = np.empty(len(weeknums))
-sortedkeys = sorted(y.keys())
-for n in sortedkeys:
+#bottom = np.empty(len(weeknums))
+#sortedkeys = sorted(y.keys())
+#for n in sortedkeys:
     # B
     #plt.bar(weeknums, y[n], bottom=bottom)
     # C
-    plt.plot(weeknums, y[n]+bottom)
+    #plt.plot(weeknums, y[n]+bottom)
     # both B and C
-    bottom = np.add(bottom, y[n])
+    #bottom = np.add(bottom, y[n])
 
 # data 
 plt.xlabel("Week numbers")
 plt.ylabel("Hours")
-#plt.legend(y.keys()) # for A
 plt.legend(sortedkeys) # for B/C
 plt.title("Amount of time on modules per week")
 plt.show()
