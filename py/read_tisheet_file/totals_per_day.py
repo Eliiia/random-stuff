@@ -95,12 +95,19 @@ startofweek = datetime(now.year, now.month, now.day - now.weekday(), tzinfo=now.
 data = cleanData(data)
 
 # parse args
+target = 0 # overwrite this below
+DAILYTARGETHOURS = 4.5
 if (len(sys.argv) == 2):
     # if one argument given, assume text direction given
     if sys.argv[1] == "day": # today 
+        target = DAILYTARGETHOURS * 60 # 4.5 hours
         start = startofday
         print(f"Reading events today (from {getDateString(startofday)} to right now)")
     elif sys.argv[1] == "week": # this week
+        weekday = (now - startofweek).days+1
+        if weekday > 5: weekday = 5
+        print(weekday)
+        target = DAILYTARGETHOURS * 60 * weekday # 4.5 hours multiplied by amount of days in week 
         start = startofweek
         print(f"Reading events this week (from {getDateString(startofweek)} to right now)")
     activity = getTotalMinutes(data, start)
@@ -136,3 +143,8 @@ for x in activity:
 hours = int(totalmins/60)
 minutes = totalmins % 60
 print(f"\nTotal : {hours} hour{'' if hours == 1 else 's'} and {minutes} minutes")
+
+# relative to target
+if target != 0: 
+    print(f"Target : {target/60} hours")
+    print(f"{((totalmins / target)*100).round}% of target")

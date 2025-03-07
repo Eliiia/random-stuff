@@ -98,7 +98,7 @@ sortedkeys = sorted(y.keys())
 y_vals = [y[n] for n in sortedkeys]
 # A2: accumulated
 #y_vals = [y[n].cumsum().tolist() for n in sortedkeys]
-plt.stackplot(weeknums, y_vals)
+plt.stackplot(weeknums, y_vals, labels=sortedkeys)
 
 # plot B/C: stacked bar chart or stacked line chart
 #bottom = np.empty(len(weeknums))
@@ -111,9 +111,15 @@ plt.stackplot(weeknums, y_vals)
     # both B and C
     #bottom = np.add(bottom, y[n])
 
+# Get target
+DAILYTARGETHOURS = 4.5
+target = DAILYTARGETHOURS * 5
+
 # show plot
 plt.xlabel("Week numbers")
 plt.ylabel("Hours")
-plt.legend(sortedkeys)
+plt.axhline(y=target, color='red', linestyle='--', linewidth=2, label=f"Weekly target ({target} hours)")
+plt.legend()
+#plt.legend(sortedkeys)
 plt.title("Amount of time on modules per week")
 plt.show()
