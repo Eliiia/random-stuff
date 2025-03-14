@@ -96,7 +96,7 @@ data = cleanData(data)
 
 # parse args
 target = 0 # overwrite this below
-DAILYTARGETHOURS = 4.5
+DAILYTARGETHOURS = 4
 if (len(sys.argv) == 2):
     # if one argument given, assume text direction given
     if sys.argv[1] == "day": # today 
@@ -122,6 +122,7 @@ elif (len(sys.argv) == 3):
     activity = getTotalMinutes(data, start, end)
 else:
     print(f"Dates not given, reading events today (from {getDateString(startofday)} to right now)")
+    target = DAILYTARGETHOURS * 60
     activity = getTotalMinutes(data, startofday)
 
 print() # empty line
@@ -145,6 +146,6 @@ minutes = totalmins % 60
 print(f"\nTotal : {hours} hour{'' if hours == 1 else 's'} and {minutes} minutes")
 
 # relative to target
-if target != 0: 
+if target != 0:
     print(f"Target : {target/60} hours")
-    print(f"{((totalmins / target)*100).round}% of target")
+    print(f"{round((totalmins / target)*100)}% of target")
